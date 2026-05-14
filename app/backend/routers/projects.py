@@ -163,6 +163,87 @@ async def create_project(data: ProjectCreate):
     )
 
 
+def _chapter_number_from_filename(fname: str) -> int | None:
+    """Extract chapter number from common naming patterns."""
+    name = os.path.splitext(fname)[0].lower()
+    # chapter_01, chapter_1, ch01, ch001, chapter01, summary_01, part_01
+    m = re.search(r'(?:chapter|summary|ch|part)[_\-\s]?0*(\d+)', name)
+    if m:
+        return int(m.group(1))
+    # plain number or trailing _N: 01.md, 1.md, anything_01
+    m = re.search(r'[_\-]0*(\d+)$', name)
+    if m:
+        return int(m.group(1))
+    m = re.fullmatch(r'0*(\d+)', name)
+    if m:
+        return int(m.group(1))
+    return None
+
+
+def _import_chapters(src_path: str, dest_path: str) -> None:
+    chapters_src = os.path.join(src_path, "chapters")
+    if not os.path.isdir(chapters_src):
+        return
+    dest_chapters = os.path.join(dest_path, "chapters")
+    os.makedirs(dest_chapters, exist_ok=True)
+    for fname in sorted(os.listdir(chapters_src)):
+        if not fname.lower().endswith(".md"):
+            continue
+        n = _chapter_number_from_filename(fname)
+        if n is None:
+            continue
+        dest_name = f"CH{n:03d}_DRAFT.md"
+        src_file = os.path.join(chapters_src, fname)
+        dest_file = os.path.join(dest_chapters, dest_name)
+        if not os.path.exists(dest_file):
+            shutil.copy2(src_file, dest_file)
+
+
+def _import_summaries(src_path: str, dest_path: str) -> None:
+    summaries_src = os.path.join(src_path, "summaries")
+    if not os.path.isdir(summaries_src):
+        return
+    dest_summaries = os.path.join(dest_path, "summaries")
+    os.makedirs(dest_summaries, exist_ok=True)
+    for fname in sorted(os.listdir(summaries_src)):
+        if not fname.lower().endswith(".md"):
+            continue
+        # skip macro/voice check files
+        low = fname.lower()
+        if any(k in low for k in ("macro", "voice_check", "check")):
+            continue
+        n = _chapter_number_from_filename(fname)
+        if n is None:
+            continue
+        dest_name = f"CH{n:03d}_SUMMARY.md"
+        src_file = os.path.join(summaries_src, fname)
+        dest_file = os.path.join(dest_summaries, dest_name)
+        if not os.path.exists(dest_file):
+            shutil.copy2(src_file, dest_file)
+
+
+def _import_finals(src_path: str, dest_path: str) -> None:
+    for candidate in ("FINAL_DRAFT", "final_draft", "final"):
+        finals_src = os.path.join(src_path, candidate)
+        if os.path.isdir(finals_src):
+            break
+    else:
+        return
+    dest_chapters = os.path.join(dest_path, "chapters")
+    os.makedirs(dest_chapters, exist_ok=True)
+    for fname in sorted(os.listdir(finals_src)):
+        if not fname.lower().endswith(".md"):
+            continue
+        n = _chapter_number_from_filename(fname)
+        if n is None:
+            continue
+        dest_name = f"CH{n:03d}_FINAL.md"
+        src_file = os.path.join(finals_src, fname)
+        dest_file = os.path.join(dest_chapters, dest_name)
+        if not os.path.exists(dest_file):
+            shutil.copy2(src_file, dest_file)
+
+
 @router.post("/import", response_model=Project, status_code=201)
 async def import_project(data: ProjectImport):
     src_path = os.path.abspath(os.path.expanduser(data.folder_path))
@@ -190,11 +271,20 @@ async def import_project(data: ProjectImport):
     for subdir in PROJECT_SUBDIRS:
         os.makedirs(os.path.join(dest_path, subdir), exist_ok=True)
 
-    # Copy source files into dest
+    # Copy top-level files
     for fname in os.listdir(src_path):
         src_file = os.path.join(src_path, fname)
         if os.path.isfile(src_file):
             shutil.copy2(src_file, os.path.join(dest_path, fname))
+
+    # Copy chapters from chapters/ subdirectory, normalising filenames to CH001_DRAFT.md
+    _import_chapters(src_path, dest_path)
+
+    # Copy summaries from summaries/ subdirectory, normalising to CH001_SUMMARY.md
+    _import_summaries(src_path, dest_path)
+
+    # Copy final drafts from FINAL_DRAFT/ subdirectory as CH001_FINAL.md
+    _import_finals(src_path, dest_path)
 
     now = _now()
 

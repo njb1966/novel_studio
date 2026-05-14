@@ -106,6 +106,54 @@ async def sync_project(project_id: int):
                 chapters_synced += 1
             await db.commit()
 
+        # ── Back-fill file paths for existing chapters on disk ──────────────
+        chapters_dir = os.path.join(root_path, "chapters")
+        summaries_dir = os.path.join(root_path, "summaries")
+        async with aiosqlite.connect(get_db_path()) as db:
+            async with db.execute(
+                "SELECT id, chapter_number FROM chapters WHERE project_id = ?",
+                (project_id,),
+            ) as cur:
+                rows = await cur.fetchall()
+            for ch_id, ch_num in rows:
+                draft   = os.path.join("chapters",  f"CH{ch_num:03d}_DRAFT.md")
+                final   = os.path.join("chapters",  f"CH{ch_num:03d}_FINAL.md")
+                summary = os.path.join("summaries", f"CH{ch_num:03d}_SUMMARY.md")
+                has_draft   = os.path.isfile(os.path.join(root_path, draft))
+                has_final   = os.path.isfile(os.path.join(root_path, final))
+                has_summary = os.path.isfile(os.path.join(root_path, summary))
+
+                # word count from draft or final
+                wc = 0
+                for p in [os.path.join(root_path, final), os.path.join(root_path, draft)]:
+                    if os.path.isfile(p):
+                        try:
+                            txt = open(p, encoding="utf-8", errors="replace").read()
+                            wc = len(txt.split())
+                        except OSError:
+                            pass
+                        break
+
+                status = "approved" if has_final else ("draft" if has_draft else "draft")
+                await db.execute(
+                    """UPDATE chapters SET
+                        draft_path   = CASE WHEN ? THEN ? ELSE draft_path END,
+                        final_path   = CASE WHEN ? THEN ? ELSE final_path END,
+                        summary_path = CASE WHEN ? THEN ? ELSE summary_path END,
+                        actual_word_count = CASE WHEN ? > 0 THEN ? ELSE actual_word_count END,
+                        status = ?
+                    WHERE id = ?""",
+                    (
+                        has_draft,   draft,
+                        has_final,   final,
+                        has_summary, summary,
+                        wc, wc,
+                        status,
+                        ch_id,
+                    ),
+                )
+            await db.commit()
+
     # ── Characters ──────────────────────────────────────────────────────────
     characters_synced = 0
     char_text = _read_file(
