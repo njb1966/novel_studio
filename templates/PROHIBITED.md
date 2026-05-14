@@ -118,7 +118,7 @@ Use em dashes only when they are beneficial and critical to the sentence structu
 AI produces paragraphs that look like perfect rectangles: three sentences, all roughly 15–20 words long, standard Subject-Verb-Object structure. **Vary paragraph length deliberately.** Some paragraphs should be one sentence. Some should be six. Follow a long, complex sentence with a short, blunt one. The prose must have burstiness — unpredictable rhythm.
 
 ### The Throat-Clearing Opening
-AI almost always begins chapters and scenes with a soft, contextualizing sentence before getting to the point. **Begin chapters in the middle of the moment, not before it.** No "The morning was quiet as Suibhne made his way to..." — start with the bell, start with his hands, start with the thing that matters.
+AI almost always begins chapters and scenes with a soft, contextualizing sentence before getting to the point. **Begin chapters in the middle of the moment, not before it.** No "The morning was quiet as [PROTAGONIST] made his way to..." — start with the action, start with the body, start with the thing that matters.
 
 ### The Emotional Summary at Paragraph End
 AI habitually ends paragraphs by telling the reader what to feel about what just happened. "He stood there for a long time, the weight of everything he had lost pressing down on him." **Ban this.** The final sentence of a paragraph should advance the scene, not summarize the emotion. Trust the reader to feel what you have shown them.
@@ -130,38 +130,44 @@ AI defaults to lists of three in emotional or descriptive passages: "The grief, 
 
 ## CATEGORY 4: NOVEL-SPECIFIC BANS
 
-### No Fantasy Register
-This novel is mythic, not fantasy. Ban:
-- "Ancient power surged through him"
-- "The magic crackled in the air"
-- "Darkness consumed"
-- "Otherworldly" (find specific, grounded alternatives)
-- "The veil between worlds" (cliché; find your own language for liminality)
+*This section is where you add bans specific to your novel's genre, subject matter, and voice. The examples below show the format — replace them with your own.*
 
-### No Gaiman Pastiche
-The AI will want to write this like Neil Gaiman because of the subject matter. Ban:
-- Wry, ironic narrator voice applied to mythic material
-- Pop-culture-inflected anachronism
-- The clever-clever tone that makes myth feel like a dinner party anecdote
-- Any sentence that sounds like it belongs in *American Gods* or *Sandman*
+### No [Genre Register That Doesn't Fit Your Novel]
+*Example: if your novel is mythic rather than fantasy, ban the fantasy register. If it's historical, ban anachronistic language. State what the novel IS, then ban the adjacent register AI will drift toward.*
 
-### No Direct Statement of Divinity (Parts I–III)
-- The word **"god"** does not appear in reference to Suibhne until Part IV at the earliest, and then only sparingly
-- No "he was something more than human"
-- No "the divine spark within him"
-- Show divinity through physical detail, through the intensity of perception, through other characters' reactions — never through the narrator labeling it
+This novel is [describe register]. Ban:
+- "[Phrase that belongs to the wrong register]"
+- "[Phrase that belongs to the wrong register]"
+- "[Phrase]" (find specific, grounded alternatives)
+
+### No [Influence] Pastiche
+*AI will default to whichever famous author your subject matter most resembles. Name that author and ban their register explicitly.*
+
+The AI will want to write this like [Author] because of [subject matter]. Ban:
+- [Specific tonal quality to avoid]
+- [Specific tonal quality to avoid]
+- Any sentence that sounds like it belongs in *[Title]* or *[Title]*
+
+### [Novel-Specific Structural Rule]
+*Any rule specific to your novel's structure — e.g. a delayed reveal, a register shift between sections, information the narrator withholds until a certain point.*
+
+- [Specific rule — what the narrator does not say, and when]
+- [Specific rule]
+- Show [the withheld thing] through [physical detail / other characters' reactions] — never through direct statement
 
 ### No Sentimentality
 Ban:
 - "And in that moment, he understood..."
-- "For the first time in centuries, he felt..."
+- "For the first time in [period of time], he felt..."
 - "Something inside him broke" (unless you specify exactly what and exactly how)
 - Any sentence that tells the reader this moment is important rather than showing them a moment that IS important
 
-### No Modern Psychological Vocabulary (Parts I–III)
-Suibhne does not "process" his grief. He does not "struggle with" his identity. He does not have "trauma." The emotional vocabulary in the Irish and Scottish sections should be physical, elemental, grounded in the natural world:
-- Not "he was overwhelmed by grief" — "the grief was a stone in his throat and he could not swallow around it"
-- Not "he struggled with his sense of self" — "he looked at his hands and did not know whose hands they were"
+### No Modern Psychological Vocabulary [if your setting requires it]
+*If your novel is set in another era, culture, or consciousness, ban the vocabulary of modern interiority. Characters should process emotion in the idiom of their world, not in therapy-speak.*
+
+[PROTAGONIST] does not "process" his grief. He does not "struggle with" his identity. He does not have "trauma." The emotional vocabulary in [your setting] should be [physical / elemental / grounded in the natural world / period-appropriate]:
+- Not "he was overwhelmed by grief" — "[period-appropriate alternative]"
+- Not "he struggled with his sense of self" — "[period-appropriate alternative]"
 
 ---
 

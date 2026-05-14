@@ -184,7 +184,10 @@ async def approve_fact(project_id: int, fact_id: int):
         # Append to continuity_log.md in the project folder
         root_path = await _get_root_path(db, project_id)
 
-    log_path = os.path.join(root_path, "continuity_log.md")
+    # Accept either case variant; prefer existing uppercase if present
+    log_path = os.path.join(root_path, "CONTINUITY_LOG.md")
+    if not os.path.exists(log_path):
+        log_path = os.path.join(root_path, "continuity_log.md")
     timestamp = _now()
     chapter_label = f"Ch {fact.chapter_number}" if fact.chapter_number else "?"
 
