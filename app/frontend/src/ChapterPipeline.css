@@ -1,0 +1,424 @@
+/* ── Chapter pipeline shell ──────────────────────────────── */
+.chapter-pipeline {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Header bar ──────────────────────────────────────────── */
+.cp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cp-back {
+  font-size: 0.82rem;
+  padding: 0.3em 0.8em;
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.cp-back:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.cp-heading {
+  flex: 1;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cp-pov-tag {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  padding: 0.2em 0.55em;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* ── Two-column body ─────────────────────────────────────── */
+.cp-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Left panel ──────────────────────────────────────────── */
+.cp-left {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 1rem;
+  gap: 0.6rem;
+}
+
+.cp-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+.cp-outline-field {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.cp-outline-field strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.cp-outline-empty {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.cp-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.4rem 0;
+}
+
+/* ── Action buttons ──────────────────────────────────────── */
+.cp-btn-generate {
+  width: 100%;
+  padding: 0.55em 1em;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.12s;
+  margin-top: 0.3rem;
+}
+
+.cp-btn-generate:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cp-btn-generate:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.cp-btn-stub {
+  width: 100%;
+  padding: 0.42em 1em;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: not-allowed;
+  opacity: 0.4;
+  text-align: left;
+}
+
+.cp-generate-error {
+  font-size: 0.78rem;
+  color: var(--danger, #e05555);
+  margin-top: 0.3rem;
+  line-height: 1.45;
+}
+
+/* ── Right panel (draft editor) ──────────────────────────── */
+.cp-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  position: relative;
+}
+
+.cp-editor-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  gap: 0.75rem;
+}
+
+.cp-wordcount {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.cp-unsaved {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.cp-save-btn {
+  font-size: 0.82rem;
+  padding: 0.3em 0.9em;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.12s;
+  white-space: nowrap;
+}
+
+.cp-save-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.cp-save-btn:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+.cp-textarea {
+  flex: 1;
+  width: 100%;
+  padding: 1.25rem;
+  background: var(--bg);
+  color: var(--text);
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  tab-size: 2;
+}
+
+.cp-textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 0.45;
+}
+
+/* ── Generating overlay ───────────────────────────────────── */
+.cp-generating-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.cp-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: cp-spin 0.8s linear infinite;
+}
+
+@keyframes cp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.cp-generating-label {
+  color: #fff;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* ── Loading state ────────────────────────────────────────── */
+.cp-loading {
+  padding: 2rem 1.25rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* ── Extract Facts button ─────────────────────────────────── */
+.cp-btn-extract {
+  width: 100%;
+  padding: 0.42em 1em;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+  text-align: left;
+  margin-top: 0.3rem;
+}
+
+.cp-btn-extract:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cp-btn-extract:not(:disabled):hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cp-extract-result {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cp-continuity-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  text-decoration: underline;
+  opacity: 0.85;
+  transition: opacity 0.12s;
+}
+
+.cp-continuity-link:hover {
+  opacity: 1;
+}
+
+/* ── Status badge in header ───────────────────────────────── */
+.cp-status-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2em 0.55em;
+  border-radius: 3px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.cp-status-draft {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: transparent;
+}
+
+.cp-status-approved {
+  color: #3cb570;
+  border-color: #3cb570;
+  background: rgba(60, 181, 112, 0.08);
+}
+
+/* ── Generic action button (outline style) ───────────────── */
+.cp-btn-action {
+  width: 100%;
+  padding: 0.42em 1em;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+  text-align: left;
+  margin-top: 0.3rem;
+}
+
+.cp-btn-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cp-btn-action:not(:disabled):hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Summary box ──────────────────────────────────────────── */
+.cp-summary-box {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6em 0.75em;
+  margin-top: 0.3rem;
+  white-space: pre-wrap;
+}
+
+/* ── Approve button ───────────────────────────────────────── */
+.cp-btn-approve {
+  width: 100%;
+  padding: 0.42em 1em;
+  background: transparent;
+  border: 1px solid #3cb570;
+  color: #3cb570;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.12s, opacity 0.12s;
+  text-align: left;
+  margin-top: 0.3rem;
+  font-weight: 600;
+}
+
+.cp-btn-approve:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+.cp-btn-approve:not(:disabled):hover {
+  background: rgba(60, 181, 112, 0.1);
+}
+
+/* ── Approve success banner ───────────────────────────────── */
+.cp-approve-success {
+  font-size: 0.78rem;
+  color: #3cb570;
+  line-height: 1.55;
+  padding: 0.5em 0.6em;
+  border: 1px solid #3cb570;
+  border-radius: 4px;
+  background: rgba(60, 181, 112, 0.06);
+  margin-top: 0.3rem;
+  font-weight: 600;
+}
+
+.cp-approve-path {
+  font-weight: 400;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-style: italic;
+}

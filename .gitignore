@@ -1,0 +1,21 @@
+# Python
+app/backend/.venv/
+app/backend/__pycache__/
+app/backend/parsers/__pycache__/
+app/backend/agents/__pycache__/
+app/backend/routers/__pycache__/
+*.pyc
+*.pyo
+
+# Node / Tauri
+app/frontend/node_modules/
+app/frontend/dist/
+app/frontend/src-tauri/target/
+
+# Runtime data
+data/
+projects/
+
+# Editor
+.DS_Store
+*.swp

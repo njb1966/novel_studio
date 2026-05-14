@@ -1,0 +1,148 @@
+/* ── QA Panel container ─────────────────────────────────────── */
+.qa-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.qa-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+/* ── Button rows ────────────────────────────────────────────── */
+.qa-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.qa-check-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.qa-run-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.42em 0.75em;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+  text-align: left;
+}
+
+.qa-run-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.qa-run-btn:not(:disabled):hover {
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.03);
+}
+
+.qa-run-btn-active {
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Re-run button */
+.qa-rerun-btn {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 0 0.3em;
+  margin-top: -0.1rem;
+  opacity: 0.6;
+  transition: opacity 0.12s, color 0.12s;
+}
+
+.qa-rerun-btn:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.qa-rerun-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ── Score badges ───────────────────────────────────────────── */
+.qa-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1em 0.45em;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.qa-badge-green {
+  background: rgba(72, 187, 120, 0.18);
+  color: #48bb78;
+  border: 1px solid rgba(72, 187, 120, 0.35);
+}
+
+.qa-badge-yellow {
+  background: rgba(214, 158, 46, 0.18);
+  color: #d6a024;
+  border: 1px solid rgba(214, 158, 46, 0.35);
+}
+
+.qa-badge-red {
+  background: rgba(224, 85, 85, 0.18);
+  color: #e05555;
+  border: 1px solid rgba(224, 85, 85, 0.35);
+}
+
+.qa-badge-grey {
+  background: rgba(150, 150, 150, 0.12);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+/* ── Error text ─────────────────────────────────────────────── */
+.qa-error {
+  font-size: 0.72rem;
+  color: var(--danger, #e05555);
+  line-height: 1.4;
+  padding: 0 0.2em;
+}
+
+/* ── Report display panel ───────────────────────────────────── */
+.qa-report-panel {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.qa-report-pre {
+  margin: 0;
+  padding: 1rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.76rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

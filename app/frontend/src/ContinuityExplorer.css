@@ -1,0 +1,289 @@
+/* ── Explorer shell ──────────────────────────────────────────── */
+.ce-explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+.ce-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+.ce-tab {
+  padding: 0.6rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.ce-tab:hover {
+  color: var(--text);
+}
+
+.ce-tab-active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.ce-tab-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1em 0.45em;
+  border-radius: 99px;
+  min-width: 1.4em;
+  text-align: center;
+}
+
+.ce-tab-count {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* ── Error bar ───────────────────────────────────────────────── */
+.ce-error {
+  padding: 0.55rem 1.25rem;
+  background: rgba(224, 85, 85, 0.12);
+  border-bottom: 1px solid rgba(224, 85, 85, 0.3);
+  color: var(--danger, #e05555);
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+/* ── Tab content area ────────────────────────────────────────── */
+.ce-tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ce-state {
+  padding: 2rem 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+}
+
+.ce-state-empty {
+  font-style: italic;
+}
+
+/* ── Filter bar (active tab) ─────────────────────────────────── */
+.ce-filters {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.65rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.ce-filter-select,
+.ce-filter-search {
+  background: var(--bg-input, #0f3460);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  padding: 0.3em 0.6em;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.ce-filter-select:focus,
+.ce-filter-search:focus {
+  border-color: var(--accent);
+}
+
+.ce-filter-search {
+  flex: 1;
+}
+
+/* ── Fact list ───────────────────────────────────────────────── */
+.ce-fact-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* ── Fact row ────────────────────────────────────────────────── */
+.ce-fact-row {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.75rem 0.9rem;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ce-pending-row:hover {
+  border-color: rgba(74, 144, 217, 0.35);
+}
+
+/* Flash animations */
+@keyframes ce-flash-approve {
+  0%   { background: rgba(72, 187, 120, 0.0); }
+  30%  { background: rgba(72, 187, 120, 0.22); border-color: rgba(72, 187, 120, 0.5); }
+  100% { background: rgba(72, 187, 120, 0.0); opacity: 0.4; }
+}
+
+@keyframes ce-flash-reject {
+  0%   { background: rgba(224, 85, 85, 0.0); }
+  30%  { background: rgba(224, 85, 85, 0.18); border-color: rgba(224, 85, 85, 0.45); }
+  100% { background: rgba(224, 85, 85, 0.0); opacity: 0.4; }
+}
+
+.ce-flash-approve {
+  animation: ce-flash-approve 0.35s ease forwards;
+  pointer-events: none;
+}
+
+.ce-flash-reject {
+  animation: ce-flash-reject 0.35s ease forwards;
+  pointer-events: none;
+}
+
+/* ── Fact header ─────────────────────────────────────────────── */
+.ce-fact-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ce-fact-subject {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ce-fact-chapter {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── Fact text ───────────────────────────────────────────────── */
+.ce-fact-text {
+  font-size: 0.83rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+
+/* ── Pending actions ─────────────────────────────────────────── */
+.ce-fact-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.ce-btn-approve,
+.ce-btn-reject {
+  font-size: 0.78rem;
+  padding: 0.28em 0.8em;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: opacity 0.12s, background 0.12s;
+}
+
+.ce-btn-approve:disabled,
+.ce-btn-reject:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ce-btn-approve {
+  background: rgba(72, 187, 120, 0.12);
+  border-color: rgba(72, 187, 120, 0.4);
+  color: #48bb78;
+}
+
+.ce-btn-approve:not(:disabled):hover {
+  background: rgba(72, 187, 120, 0.22);
+}
+
+.ce-btn-reject {
+  background: rgba(224, 85, 85, 0.1);
+  border-color: rgba(224, 85, 85, 0.35);
+  color: #e05555;
+}
+
+.ce-btn-reject:not(:disabled):hover {
+  background: rgba(224, 85, 85, 0.2);
+}
+
+/* ── Type tags ───────────────────────────────────────────────── */
+.ce-type-tag {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15em 0.5em;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Defaults — accent colour */
+.ce-type-tag {
+  background: rgba(74, 144, 217, 0.14);
+  border: 1px solid rgba(74, 144, 217, 0.3);
+  color: var(--accent);
+}
+
+/* Specific overrides */
+.ce-type-injury,
+.ce-type-death {
+  background: rgba(224, 85, 85, 0.12);
+  border-color: rgba(224, 85, 85, 0.3);
+  color: #e05555;
+}
+
+.ce-type-character_state,
+.ce-type-relationship {
+  background: rgba(214, 158, 46, 0.12);
+  border-color: rgba(214, 158, 46, 0.3);
+  color: #d6a024;
+}
+
+.ce-type-mystery,
+.ce-type-seed {
+  background: rgba(138, 99, 210, 0.12);
+  border-color: rgba(138, 99, 210, 0.3);
+  color: #a07de0;
+}
+
+.ce-type-promise,
+.ce-type-timeline {
+  background: rgba(72, 187, 120, 0.12);
+  border-color: rgba(72, 187, 120, 0.3);
+  color: #48bb78;
+}
+
+.ce-type-world_fact,
+.ce-type-object_location {
+  background: rgba(74, 144, 217, 0.14);
+  border-color: rgba(74, 144, 217, 0.3);
+  color: var(--accent);
+}
