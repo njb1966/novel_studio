@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { checkHealth, getProjects, createProject, importProject } from './api';
+import { checkHealth, getProjects, createProject, importProject, deleteProject } from './api';
 import ProjectWorkspace from './ProjectWorkspace';
 import './App.css';
 
@@ -179,7 +179,22 @@ function ImportProjectModal({ onClose, onImported }) {
   );
 }
 
-function ProjectCard({ project, onOpen }) {
+function ProjectCard({ project, onOpen, onDelete }) {
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete(e) {
+    e.stopPropagation();
+    if (!window.confirm(`Delete "${project.title}"?\n\nThis will permanently remove the project folder and all its files from disk. This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await deleteProject(project.id);
+      onDelete(project.id);
+    } catch (err) {
+      alert(`Delete failed: ${err.message}`);
+      setDeleting(false);
+    }
+  }
+
   return (
     <div className="project-card">
       <div className="project-card-body">
@@ -207,6 +222,9 @@ function ProjectCard({ project, onOpen }) {
       <div className="project-card-actions">
         <button className="btn-open" onClick={() => onOpen(project)}>
           Open
+        </button>
+        <button className="btn-delete" onClick={handleDelete} disabled={deleting} title="Delete project">
+          {deleting ? '...' : 'Delete'}
         </button>
       </div>
     </div>
@@ -304,7 +322,12 @@ export default function App() {
         ) : (
           <div className="project-list">
             {projects.map(p => (
-              <ProjectCard key={p.id} project={p} onOpen={setSelectedProject} />
+              <ProjectCard
+                key={p.id}
+                project={p}
+                onOpen={setSelectedProject}
+                onDelete={id => setProjects(prev => prev.filter(x => x.id !== id))}
+              />
             ))}
           </div>
         )}

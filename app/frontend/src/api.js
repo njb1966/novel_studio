@@ -163,3 +163,11 @@ export async function exportManuscript(projectId, options = {}) {
 export async function getExportStatus(projectId) {
   return request(`/projects/${projectId}/export/status`);
 }
+
+export async function deleteProject(projectId) {
+  const res = await fetch(`${BASE}/projects/${projectId}`, { method: 'DELETE' });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || `HTTP ${res.status}`);
+  }
+}

@@ -295,6 +295,30 @@ async def list_chapters(project_id: int):
     ]
 
 
+@router.delete("/{project_id}", status_code=204)
+async def delete_project(project_id: int):
+    async with aiosqlite.connect(get_db_path()) as db:
+        async with db.execute(
+            "SELECT root_path FROM projects WHERE id = ?", (project_id,)
+        ) as cur:
+            row = await cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Project not found.")
+        root_path = row[0]
+
+        # Delete all related rows first
+        await db.execute("DELETE FROM qa_reports WHERE project_id = ?", (project_id,))
+        await db.execute("DELETE FROM continuity_facts WHERE project_id = ?", (project_id,))
+        await db.execute("DELETE FROM characters WHERE project_id = ?", (project_id,))
+        await db.execute("DELETE FROM chapters WHERE project_id = ?", (project_id,))
+        await db.execute("DELETE FROM projects WHERE id = ?", (project_id,))
+        await db.commit()
+
+    # Remove project folder from disk
+    if root_path and os.path.isdir(root_path):
+        shutil.rmtree(root_path)
+
+
 @router.get("/{project_id}", response_model=Project)
 async def get_project(project_id: int):
     async with aiosqlite.connect(get_db_path()) as db:
