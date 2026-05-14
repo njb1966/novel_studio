@@ -19,3 +19,17 @@ projects/
 # Editor
 .DS_Store
 *.swp
+
+# Claude Code internals
+.claude/
+
+# Root-level novel files (user content — templates/ has the anonymised versions)
+CHARACTER_BIBLE.md
+CONTINUITY_LOG.md
+FRAMEWORK_COMPARISON.md
+NOVEL_SPEC.md
+OUTLINE.md
+PROHIBITED.md
+PROMPT_LIBRARY.md
+WORLD_BIBLE.md
+writing-refiner.md
