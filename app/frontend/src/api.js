@@ -111,6 +111,10 @@ export async function getChapterReports(projectId, chapterNumber) {
   return request(`/projects/${projectId}/chapters/${chapterNumber}/reports`);
 }
 
+export async function getProjectQA(projectId) {
+  return request(`/projects/${projectId}/qa`);
+}
+
 export async function extractFacts(projectId, chapterNumber) {
   return request(`/projects/${projectId}/chapters/${chapterNumber}/extract-facts`, {
     method: 'POST',

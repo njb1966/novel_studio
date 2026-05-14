@@ -229,12 +229,18 @@ async def get_chapter_reports(project_id: int, chapter_number: int):
 async def get_project_qa(project_id: int):
     async with aiosqlite.connect(get_db_path()) as db:
         async with db.execute(
-            """SELECT id, project_id, chapter_id, report_type, score, report_markdown, created_at
-                 FROM qa_reports
-                WHERE project_id = ?
-                ORDER BY id DESC""",
+            """SELECT q.id, q.project_id, q.chapter_id, q.report_type, q.score,
+                      q.report_markdown, q.created_at,
+                      COALESCE(c.chapter_number, 0) AS chapter_number
+                 FROM qa_reports q
+                 LEFT JOIN chapters c ON c.id = q.chapter_id
+                WHERE q.project_id = ?
+                ORDER BY q.id DESC""",
             (project_id,),
         ) as cur:
             rows = await cur.fetchall()
 
-    return [_row_to_report(r) for r in rows]
+    return [
+        {**_row_to_report(r).__dict__, "chapter_number": r[7]}
+        for r in rows
+    ]

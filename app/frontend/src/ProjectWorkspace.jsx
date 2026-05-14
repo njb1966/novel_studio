@@ -3,6 +3,7 @@ import { getFile, saveFile, syncProject, getChapters } from './api';
 import ChapterPipeline from './ChapterPipeline';
 import ContinuityExplorer from './ContinuityExplorer';
 import ExportPanel from './ExportPanel';
+import QAReportsPanel from './QAReportsPanel';
 import './ProjectWorkspace.css';
 
 const EDITOR_ITEMS = [
@@ -15,12 +16,11 @@ const EDITOR_ITEMS = [
 const PANEL_ITEMS = [
   { label: 'Chapters',    panel: 'chapters' },
   { label: 'Continuity',  panel: 'continuity' },
+  { label: 'QA Reports',  panel: 'qa' },
   { label: 'Export',      panel: 'export' },
 ];
 
-const STUB_ITEMS = [
-  { label: 'QA Reports', milestone: 4 },
-];
+const STUB_ITEMS = [];
 
 function wordCount(text) {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -243,6 +243,12 @@ export default function ProjectWorkspace({ project, onBack }) {
             </button>
             <button
               className="sidebar-item"
+              onClick={() => { setSelectedChapter(null); switchView('panel:qa'); }}
+            >
+              QA Reports
+            </button>
+            <button
+              className="sidebar-item"
               onClick={() => { setSelectedChapter(null); switchView('panel:export'); }}
             >
               Export
@@ -339,19 +345,22 @@ export default function ProjectWorkspace({ project, onBack }) {
             </button>
           ))}
 
-          <div className="sidebar-divider" />
-
-          <div className="sidebar-section-label">Coming Soon</div>
-          {STUB_ITEMS.map(item => (
-            <button
-              key={item.label}
-              className="sidebar-item sidebar-stub"
-              disabled
-              title={`Coming in Milestone ${item.milestone}`}
-            >
-              {item.label}
-            </button>
-          ))}
+          {STUB_ITEMS.length > 0 && (
+            <>
+              <div className="sidebar-divider" />
+              <div className="sidebar-section-label">Coming Soon</div>
+              {STUB_ITEMS.map(item => (
+                <button
+                  key={item.label}
+                  className="sidebar-item sidebar-stub"
+                  disabled
+                  title={`Coming in Milestone ${item.milestone}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </>
+          )}
         </nav>
 
         {/* Main panel */}
@@ -399,6 +408,8 @@ export default function ProjectWorkspace({ project, onBack }) {
               />
             ) : activePanel === 'continuity' ? (
               <ContinuityExplorer project={project} />
+            ) : activePanel === 'qa' ? (
+              <QAReportsPanel project={project} />
             ) : activePanel === 'export' ? (
               <ExportPanel project={project} />
             ) : null
