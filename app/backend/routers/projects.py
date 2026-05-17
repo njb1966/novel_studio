@@ -95,7 +95,16 @@ async def create_project(data: ProjectCreate):
     if not slug:
         raise HTTPException(status_code=400, detail="Title produces an empty slug.")
 
-    project_path = os.path.join(PROJECTS_DIR, slug)
+    if data.storage_path and data.storage_path.strip():
+        project_path = os.path.abspath(os.path.expanduser(data.storage_path.strip()))
+        parent = os.path.dirname(project_path)
+        if not os.path.isdir(parent):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Parent directory does not exist: {parent}",
+            )
+    else:
+        project_path = os.path.join(PROJECTS_DIR, slug)
 
     # Check for slug collision in DB
     async with aiosqlite.connect(get_db_path()) as db:

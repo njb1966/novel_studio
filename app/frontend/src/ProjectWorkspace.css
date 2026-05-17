@@ -39,6 +39,100 @@
   white-space: nowrap;
 }
 
+.ws-scaffold {
+  font-size: 0.85rem;
+  padding: 0.35em 1em;
+  white-space: nowrap;
+}
+
+/* ── Scaffold modal ─────────────────────────────────── */
+.scaffold-modal {
+  width: 420px;
+  max-width: 95vw;
+}
+
+.scaffold-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.scaffold-hint {
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+  padding: 0 1.25rem;
+}
+
+.scaffold-warn {
+  color: var(--danger);
+}
+
+.scaffold-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.scaffold-section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.scaffold-file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.scaffold-file-item {
+  font-size: 0.875rem;
+  padding: 0.3em 0.6em;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.scaffold-file-ok {
+  background: rgba(80, 200, 120, 0.12);
+  color: var(--text);
+}
+
+.scaffold-file-ok::before { content: '✓'; color: #50c878; font-size: 0.8em; }
+
+.scaffold-file-skip {
+  background: var(--bg-input);
+  color: var(--text-dim);
+}
+
+.scaffold-file-skip::before { content: '–'; color: var(--text-dim); font-size: 0.8em; }
+
+.scaffold-file-err {
+  background: rgba(224, 85, 85, 0.12);
+  color: var(--danger);
+}
+
+.scaffold-file-err::before { content: '✕'; color: var(--danger); font-size: 0.8em; }
+
+.scaffold-force-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
 /* ── Body: sidebar + editor ────────────────────────── */
 .ws-body {
   display: flex;

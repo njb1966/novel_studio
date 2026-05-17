@@ -23,6 +23,7 @@ class ProjectCreate(BaseModel):
     pov: str = ""
     tense: str = ""
     genre: str = ""
+    storage_path: str = ""
 
 
 class ProjectImport(BaseModel):

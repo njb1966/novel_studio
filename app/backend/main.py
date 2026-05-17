@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from database import init_db
-from routers import projects, files, sync, chapters as chapters_router, qa as qa_router, continuity as continuity_router, export as export_router
+from routers import projects, files, sync, chapters as chapters_router, qa as qa_router, continuity as continuity_router, export as export_router, scaffold as scaffold_router
 
 
 @asynccontextmanager
@@ -29,6 +29,7 @@ app.include_router(chapters_router.router)
 app.include_router(qa_router.router)
 app.include_router(continuity_router.router)
 app.include_router(export_router.router)
+app.include_router(scaffold_router.router)
 
 
 @app.get("/health")

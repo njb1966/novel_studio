@@ -9,6 +9,7 @@ const EMPTY_CREATE = {
   pov: '',
   tense: '',
   target_word_count: 80000,
+  storage_path: '',
 };
 
 function formatDate(iso) {
@@ -113,6 +114,18 @@ function NewProjectModal({ onClose, onCreated }) {
             min={1000}
             step={1000}
           />
+        </label>
+        <label>
+          Storage Path
+          <input
+            type="text"
+            value={form.storage_path}
+            onChange={set('storage_path')}
+            placeholder="Leave blank to use default projects folder"
+          />
+          <span className="field-hint">
+            Full path where project files will be saved, e.g. <code>/home/nick/novels/my-novel</code>
+          </span>
         </label>
         {error && <p className="form-error">{error}</p>}
         <div className="modal-actions">

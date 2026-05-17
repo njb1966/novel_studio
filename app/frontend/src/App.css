@@ -277,6 +277,13 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 .modal-form input:focus { border-color: var(--accent); }
 .required { color: var(--danger); }
+.field-hint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
 .modal-hint {
   font-size: 0.82rem;
   color: var(--text-dim);

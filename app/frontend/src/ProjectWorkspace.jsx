@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getFile, saveFile, syncProject, getChapters } from './api';
+import { getFile, saveFile, syncProject, getChapters, getScaffoldStatus, scaffoldProject } from './api';
 import ChapterPipeline from './ChapterPipeline';
 import ContinuityExplorer from './ContinuityExplorer';
 import ExportPanel from './ExportPanel';
@@ -98,6 +98,176 @@ function ChapterList({ projectId, refreshKey, onSelectChapter }) {
   );
 }
 
+// ── Scaffold modal ───────────────────────────────────────────────────────────
+function ScaffoldModal({ project, onClose, onDone }) {
+  const [status, setStatus]   = useState(null);   // scaffold/status result
+  const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
+  const [force, setForce]     = useState(false);
+  const [result, setResult]   = useState(null);
+  const [error, setError]     = useState('');
+
+  useEffect(() => {
+    getScaffoldStatus(project.id)
+      .then(s  => { setStatus(s); setLoading(false); })
+      .catch(() => { setLoading(false); });
+  }, [project.id]);
+
+  async function handleRun() {
+    setRunning(true);
+    setError('');
+    try {
+      const res = await scaffoldProject(project.id, force);
+      setResult(res);
+      if (res.generated.length > 0) onDone();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  const FILE_LABELS = {
+    'novel_spec.md':      'Novel Spec',
+    'character_bible.md': 'Character Bible',
+    'world_bible.md':     'World Bible',
+    'continuity_log.md':  'Continuity Log',
+  };
+
+  const existingFiles = status
+    ? Object.entries(status.files).filter(([, has]) => has).map(([f]) => f)
+    : [];
+  const missingFiles = status
+    ? Object.entries(status.files).filter(([, has]) => !has).map(([f]) => f)
+    : [];
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal scaffold-modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Scaffold Documents</h2>
+          <button className="modal-close" onClick={onClose}>&times;</button>
+        </div>
+
+        {loading ? (
+          <p className="scaffold-hint">Checking project files...</p>
+        ) : !status?.has_outline ? (
+          <div className="scaffold-body">
+            <p className="scaffold-hint scaffold-warn">
+              OUTLINE.md is empty or missing. Write your outline first, then scaffold.
+            </p>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={onClose}>Close</button>
+            </div>
+          </div>
+        ) : result ? (
+          <div className="scaffold-body">
+            {result.generated.length > 0 && (
+              <div className="scaffold-section">
+                <p className="scaffold-section-label">Generated</p>
+                <ul className="scaffold-file-list">
+                  {result.generated.map(f => (
+                    <li key={f} className="scaffold-file-item scaffold-file-ok">
+                      {FILE_LABELS[f] || f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {result.skipped.length > 0 && (
+              <div className="scaffold-section">
+                <p className="scaffold-section-label">Skipped (already exist)</p>
+                <ul className="scaffold-file-list">
+                  {result.skipped.map(f => (
+                    <li key={f} className="scaffold-file-item scaffold-file-skip">
+                      {FILE_LABELS[f] || f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {result.errors.length > 0 && (
+              <div className="scaffold-section">
+                <p className="scaffold-section-label scaffold-warn">Errors</p>
+                <ul className="scaffold-file-list">
+                  {result.errors.map(e => (
+                    <li key={e.file} className="scaffold-file-item scaffold-file-err">
+                      {FILE_LABELS[e.file] || e.file}: {e.error}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="modal-actions">
+              <button className="btn-primary" onClick={onClose}>Done</button>
+            </div>
+          </div>
+        ) : (
+          <div className="scaffold-body">
+            <p className="scaffold-hint">
+              Generate foundational documents from your outline using AI.
+              This makes {missingFiles.length > 0 ? missingFiles.length : 'all'} LLM
+              call{missingFiles.length !== 1 ? 's' : ''} in parallel — expect 30–90 seconds.
+            </p>
+
+            {existingFiles.length > 0 && (
+              <div className="scaffold-section">
+                <p className="scaffold-section-label">Already have content</p>
+                <ul className="scaffold-file-list">
+                  {existingFiles.map(f => (
+                    <li key={f} className="scaffold-file-item scaffold-file-skip">
+                      {FILE_LABELS[f] || f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {missingFiles.length > 0 && (
+              <div className="scaffold-section">
+                <p className="scaffold-section-label">Will generate</p>
+                <ul className="scaffold-file-list">
+                  {missingFiles.map(f => (
+                    <li key={f} className="scaffold-file-item scaffold-file-ok">
+                      {FILE_LABELS[f] || f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {existingFiles.length > 0 && (
+              <label className="scaffold-force-row">
+                <input
+                  type="checkbox"
+                  checked={force}
+                  onChange={e => setForce(e.target.checked)}
+                />
+                Overwrite existing files
+              </label>
+            )}
+
+            {error && <p className="form-error">{error}</p>}
+
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={onClose} disabled={running}>
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleRun}
+                disabled={running || (!force && missingFiles.length === 0)}
+              >
+                {running ? 'Generating…' : 'Generate'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Workspace ────────────────────────────────────────────────────────────────
 export default function ProjectWorkspace({ project, onBack }) {
   // 'editor:filename' or 'panel:chapters'
@@ -112,6 +282,7 @@ export default function ProjectWorkspace({ project, onBack }) {
   const [syncing, setSyncing]         = useState(false);
   const [syncStatus, setSyncStatus]   = useState('');
   const [chaptersKey, setChaptersKey] = useState(0);
+  const [showScaffold, setShowScaffold] = useState(false);
 
   // Chapter pipeline — null means showing the list
   const [selectedChapter, setSelectedChapter] = useState(null);
@@ -309,6 +480,14 @@ export default function ProjectWorkspace({ project, onBack }) {
         </button>
 
         <button
+          className="btn-secondary ws-scaffold"
+          onClick={() => setShowScaffold(true)}
+          title="Generate NOVEL_SPEC, CHARACTER_BIBLE, WORLD_BIBLE, CONTINUITY_LOG from outline"
+        >
+          Scaffold Docs
+        </button>
+
+        <button
           className="btn-primary ws-save"
           onClick={handleSave}
           disabled={!isDirty || saving}
@@ -316,6 +495,17 @@ export default function ProjectWorkspace({ project, onBack }) {
           {saving ? 'Saving...' : 'Save'}
         </button>
       </header>
+
+      {showScaffold && (
+        <ScaffoldModal
+          project={project}
+          onClose={() => setShowScaffold(false)}
+          onDone={() => {
+            setShowScaffold(false);
+            if (isEditorView && activeFile) loadFile(activeFile);
+          }}
+        />
+      )}
 
       <div className="ws-body">
 

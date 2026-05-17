@@ -111,6 +111,12 @@ export async function getChapterReports(projectId, chapterNumber) {
   return request(`/projects/${projectId}/chapters/${chapterNumber}/reports`);
 }
 
+export async function fixProse(projectId, chapterNumber) {
+  return request(`/projects/${projectId}/chapters/${chapterNumber}/fix-prose`, {
+    method: 'POST',
+  });
+}
+
 export async function getProjectQA(projectId) {
   return request(`/projects/${projectId}/qa`);
 }
@@ -166,6 +172,17 @@ export async function exportManuscript(projectId, options = {}) {
 
 export async function getExportStatus(projectId) {
   return request(`/projects/${projectId}/export/status`);
+}
+
+export async function getScaffoldStatus(projectId) {
+  return request(`/projects/${projectId}/scaffold/status`);
+}
+
+export async function scaffoldProject(projectId, force = false) {
+  return request(`/projects/${projectId}/scaffold`, {
+    method: 'POST',
+    body: JSON.stringify({ force }),
+  });
 }
 
 export async function deleteProject(projectId) {
